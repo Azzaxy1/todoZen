@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
-import TodoForm from "./components/TodoForm"
-import TodoWrapper from "./components/TodoWrapper"
+import TodoWrapper from "./components/TodoWrapper";
 import TodoApp from "./data/TodoApp.json";
 
-
 function App() {
-
   localStorage.setItem("todoAppData", JSON.stringify(TodoApp));
 
   const getTodoAppData = () => {
@@ -16,18 +13,19 @@ function App() {
       return [];
     }
   };
-  
+
   const [data, setData] = useState(getTodoAppData());
   useEffect(() => {
     localStorage.setItem("todoAppData", JSON.stringify(data));
-  })
+  });
   return (
     <>
       <div className="bg-cyan-400 flex justify-center items-center h-[100vh]">
-        <TodoWrapper data={data} setData={setData}/>
+        <TodoWrapper data={data} setData={setData} />
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
+
