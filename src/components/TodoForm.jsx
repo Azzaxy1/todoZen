@@ -1,25 +1,23 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const TodoForm = ({ data, setData }) => {
-  const [value, setValue] = useState("");
+const TodoForm = ({ todos, setTodos }) => {
+  const [taskValue, setTaskValue] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let lastID;
-    data.map((data, index, arr) => {
-      if (arr.length - 1 == index) {
-        lastID = data.id;
-      }
-    });
-    const newData = {
-      id: lastID + 1,
-      task: value,
+
+    const newTodo = {
+      id: new Date().getTime(),
+      task: taskValue,
       complete: false,
-      edit: false,
     };
-    setData([...data, newData]);
-    setValue("");
+    setTodos([...todos, newTodo]);
+    setTaskValue("");
+  };
+
+  const handleChange = (e) => {
+    setTaskValue(e.target.value);
   };
 
   return (
@@ -27,9 +25,9 @@ const TodoForm = ({ data, setData }) => {
       <input
         type="text"
         className="p-2 rounded-lg"
-        value={value}
+        value={taskValue}
         placeholder="Type your task in today"
-        onChange={(e) => setValue(e.target.value)}
+        onChange={handleChange}
       />
       <button
         type="submit"
@@ -42,14 +40,14 @@ const TodoForm = ({ data, setData }) => {
 };
 
 TodoForm.propTypes = {
-  data: PropTypes.arrayOf(
+  todos: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       task: PropTypes.string.isRequired,
       complete: PropTypes.bool.isRequired,
     }).isRequired
   ),
-  setData: PropTypes.func.isRequired,
+  setTodos: PropTypes.func.isRequired,
 };
 
 export default TodoForm;
