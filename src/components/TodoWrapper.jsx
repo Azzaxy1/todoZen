@@ -15,12 +15,14 @@ const TodoWrapper = ({ data, setData }) => {
 };
 
 TodoWrapper.propTypes = {
-  data: PropTypes.shape({
-    id: PropTypes.number,
-    task: PropTypes.string,
-    complete: PropTypes.bool,
-  }),
-  setData: PropTypes.func,
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      task: PropTypes.string.isRequired,
+      complete: PropTypes.bool.isRequired,
+    }).isRequired
+  ),
+  setData: PropTypes.func.isRequired,
 };
 
 export default TodoWrapper;

@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import PropTypes from "prop-types";
 
 const Todo = ({ data, setData }) => {
   const changeCompleted = (id) => {
@@ -10,7 +11,7 @@ const Todo = ({ data, setData }) => {
         datas.complete ? (datas.complete = false) : (datas.complete = true);
         const getTaskID = document.getElementById(`taskName${datas.id}`);
         datas.complete
-          ? (getTaskID.className = "line-through text-red-400")
+          ? (getTaskID.className = "text-red-400 line-through")
           : (getTaskID.className = "text-white");
         setData(updateTodo);
       }
@@ -62,6 +63,17 @@ const Todo = ({ data, setData }) => {
       </div>
     );
   });
+};
+
+Todo.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      task: PropTypes.string.isRequired,
+      complete: PropTypes.bool.isRequired,
+    }).isRequired
+  ),
+  setData: PropTypes.func.isRequired,
 };
 
 export default Todo;
