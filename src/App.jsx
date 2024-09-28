@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TodoWrapper from "./components/TodoWrapper";
-import TodoApp from "./data/TodoApp.json";
+import TodoApp from "./data/todos.json";
 
 function App() {
   const [data, setData] = useState([]);
