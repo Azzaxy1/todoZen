@@ -1,5 +1,6 @@
 import TodoForm from "./TodoForm";
 import Todo from "./Todo";
+import PropTypes from "prop-types";
 
 const TodoWrapper = ({ data, setData }) => {
   return (
@@ -11,6 +12,15 @@ const TodoWrapper = ({ data, setData }) => {
       <Todo data={data} setData={setData} />
     </div>
   );
+};
+
+TodoWrapper.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.number,
+    task: PropTypes.string,
+    complete: PropTypes.bool,
+  }),
+  setData: PropTypes.func,
 };
 
 export default TodoWrapper;
