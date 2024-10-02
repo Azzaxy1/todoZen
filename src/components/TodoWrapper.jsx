@@ -7,7 +7,7 @@ const TodoWrapper = ({ todos, setTodos }) => {
   return (
     <div className="bg-cyan-600 my-[5rem] p-[2rem]  rounded-[5px]">
       <h1 className="text-center text-[1.75rem] mb-[0.5rem] text-white font-bold">
-        Todo List
+        TodoZen
       </h1>
       <TodoForm todos={todos} setTodos={setTodos} />
       <Todo todos={todos} setTodos={setTodos} />
