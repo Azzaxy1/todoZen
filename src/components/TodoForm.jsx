@@ -1,5 +1,10 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import Button from "./ui/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { setTodosToStorage } from "../utils";
+import Input from "./ui/Input";
 
 const TodoForm = ({ todos, setTodos }) => {
   const [taskValue, setTaskValue] = useState("");
@@ -10,31 +15,32 @@ const TodoForm = ({ todos, setTodos }) => {
     const newTodo = {
       id: new Date().getTime(),
       task: taskValue,
-      complete: false,
+      completed: false,
     };
-    setTodos([...todos, newTodo]);
+
+    const updatedTodos = [...todos, newTodo];
+    setTodos(updatedTodos);
+    setTodosToStorage(updatedTodos);
     setTaskValue("");
   };
 
-  const handleChange = (e) => {
-    setTaskValue(e.target.value);
-  };
+  const handleChange = (e) => setTaskValue(e.target.value);
 
   return (
     <form className="w-full mb-[1rem] flex gap-2" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="p-2 rounded-lg"
-        value={taskValue}
+      <Input
+        classname="p-2 rounded-lg"
         placeholder="Type your task in today"
+        type="text"
         onChange={handleChange}
+        value={taskValue}
       />
-      <button
+      <Button
         type="submit"
-        className="bg-cyan-800 text-white border-none p-[0.55rem] cursor-pointer rounded-lg font-bold"
+        className="bg-cyan-800 hover:bg-cyan-700 text-white border-none p-[0.55rem] cursor-pointer rounded-lg font-bold"
       >
-        Add new task
-      </button>
+        <FontAwesomeIcon icon={faPlus} /> Add new task
+      </Button>
     </form>
   );
 };
@@ -44,7 +50,7 @@ TodoForm.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       task: PropTypes.string.isRequired,
-      complete: PropTypes.bool.isRequired,
+      completed: PropTypes.bool.isRequired,
     }).isRequired
   ),
   setTodos: PropTypes.func.isRequired,

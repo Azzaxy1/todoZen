@@ -1,21 +1,21 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import PropTypes from "prop-types";
-import Button from "./Button";
+import ButtonDelete from "./DeleteButton";
+import EditButton from "./EditButton";
+import Input from "./ui/Input";
+import { setTodosToStorage } from "../utils";
+import SaveButton from "./SaveButton";
+import { useState } from "react";
 
 const Todo = ({ todos, setTodos }) => {
+  const [editId, setEditId] = useState(null); // Simpan ID todo yang sedang diedit
+  const [editTask, setEditTask] = useState(""); // Simpan nilai yang diubah pada task
+
   const changeCompleted = (id) => {
-    todos.map((datas) => {
-      if (datas.id === id) {
-        const updateTodo = [...todos];
-        datas.complete ? (datas.complete = false) : (datas.complete = true);
-        const getTaskID = document.getElementById(`taskName${datas.id}`);
-        datas.complete
-          ? (getTaskID.className = "text-red-400 line-through")
-          : (getTaskID.className = "text-white");
-        setTodos(updateTodo);
-      }
-    });
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    );
+    setTodos(updatedTodos);
+    setTodosToStorage(updatedTodos);
   };
 
   const deleteTodo = (id) => {
@@ -23,39 +23,63 @@ const Todo = ({ todos, setTodos }) => {
       return id !== data.id;
     });
     setTodos(deleteID);
+    setTodosToStorage(deleteID);
   };
 
-  const editTodo = (id) => {
-    todos.map((datas) => {
-      if (datas.id === id) {
-        const newText = prompt("Edit todo:", datas.task);
-        if (newText !== null) {
-          const updateTodo = [...todos];
-          datas.task = newText;
-          setTodos(updateTodo);
-        }
-      }
+  const startEdit = (id, task) => {
+    setEditId(id);
+    setEditTask(task);
+  };
+
+  const handleEditChange = (e) => setEditTask(e.target.value);
+
+  const saveTodo = (id) => {
+    const updatedTodo = todos.map((todo) => {
+      return todo.id === id ? { ...todo, task: editTask } : todo;
     });
+    setTodos(updatedTodo);
+    setTodosToStorage(updatedTodo);
+    setEditId(null);
   };
 
-  return todos.map((todo, i) => {
+  return todos.map((todo) => {
     return (
       <div
         className="flex justify-between items-center bg-cyan-800 text-white p-[8px] rounded-[5px] mb-[1rem] cursor-pointer"
-        key={i}
+        key={todo.id}
       >
-        <p id={`taskName${todo.id}`}>{todo.task}</p>
+        {editId === todo.id ? (
+          <Input
+            classname="w-full mr-2 text-black rounded-sm ps-2"
+            value={editTask}
+            onChange={handleEditChange}
+          />
+        ) : (
+          <p
+            className={
+              !todo.completed ? "text-white" : "text-red-400 line-through"
+            }
+          >
+            {todo.task}
+          </p>
+        )}
+
         <div className="flex gap-2">
-          <input
-            type="checkbox"
-            onChange={() => changeCompleted(todo.id)}
-            checked={todo.completed}
-          />
-          <FontAwesomeIcon
-            icon={faPenToSquare}
-            onClick={() => editTodo(todo.id)}
-          />
-          <Button deleteTodo={deleteTodo} todo={todo} />
+          {editId === todo.id ? (
+            <>
+              <SaveButton saveTodo={() => saveTodo(todo.id)} />
+            </>
+          ) : (
+            <>
+              <Input
+                type="checkbox"
+                checked={todo.completed}
+                onChange={() => changeCompleted(todo.id)}
+              />
+              <EditButton onChangeTask={() => startEdit(todo.id, todo.task)} />
+              <ButtonDelete deleteTodo={deleteTodo} todo={todo} />
+            </>
+          )}
         </div>
       </div>
     );
@@ -67,7 +91,7 @@ Todo.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       task: PropTypes.string.isRequired,
-      complete: PropTypes.bool.isRequired,
+      completed: PropTypes.bool.isRequired,
     }).isRequired
   ),
   setTodos: PropTypes.func.isRequired,

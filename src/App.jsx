@@ -5,17 +5,19 @@ import inizializedTodos from "./data/todos.json";
 function App() {
   const [todos, setTodos] = useState([]);
 
-  const getTodoAppData = () => {
-    localStorage.setItem("todos", JSON.stringify(inizializedTodos));
-
+  const getTodos = () => {
     const todosData = JSON.parse(localStorage.getItem("todos"));
-    setTodos(todosData);
+    if (todosData) {
+      setTodos(todosData);
+    } else {
+      setTodos(inizializedTodos);
+    }
   };
-  console.log(todos);
 
   useEffect(() => {
-    getTodoAppData();
+    getTodos();
   }, []);
+
   return (
     <>
       <div className="bg-cyan-400 flex justify-center items-center min-h-[100vh]">
